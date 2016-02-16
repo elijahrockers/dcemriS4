@@ -400,7 +400,7 @@ setMethod("CA.fast", signature(dynamic="array"),
   theta <- dangle * pi/180
   cat("Using TR of 3.14 ms to calculate R1t...", fill=TRUE)
   TR <- 3.14/1000
-  A <- sweep(sweep(dynamic, 1:3, dynamic[,,,1], "-"),
+  A <- sweep(sweep(dynamic, 1:3, dynamic[,,,1:10], "-"),
              1:3, R1est$M0, "/") / sin(theta)
   B <- (1 - exp(-TR * R1est$R10)) / (1 - cos(theta) * exp(-TR * R1est$R10))
   AB <- sweep(A, 1:3, B, "+")

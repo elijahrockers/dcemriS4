@@ -397,17 +397,24 @@ setMethod("CA.fast", signature(dynamic="array"),
   if (verbose) {
     cat("  Calculating concentration...", fill=TRUE)
   }
-  theta <- dangle * pi/180
-  cat("Using TR of 3.14 ms to calculate R1t...", fill=TRUE)
-  TR <- 3.14/1000
-  S0 <- dynamic[,,,1:10]
-  S0mean <- apply(S0, c(1, 2, 3), mean)
-  A <- sweep(sweep(dynamic, 1:3, S0mean, "-"),
-             1:3, R1est$M0, "/") / sin(theta)
-  B <- (1 - exp(-TR * R1est$R10)) / (1 - cos(theta) * exp(-TR * R1est$R10))
+  cat("  DCE Theta...", fill=TRUE)
+  dtheta <- dangle * pi/180
+  cat("  VFA Theta...", fill=TRUE)
+  vtheta <- 12 * pi/180
+  FA12index <- grep(".*FA_12.*", fflip)
+  cat("  Grabbing VFA image...", fill=TRUE)
+  S0 <- flip[,,,FA12index] #4th flip angle... should be 12 degrees
+  
+  cat("  Defining new 'A'", fill=TRUE)
+  At <- sweep(dynamic, 1:3, R1est$M0, "/") / sin(dtheta)
+  A0 <- sweep(S0, 1:3, R1est$M0, "/") / sin(vtheta)
+  A <- sweep(At, 1:3, A0, "-")
+  rm(At,A0)
+  B <- (1 - exp(-TR * R1est$R10)) / (1 - cos(vtheta) * exp(-TR * R1est$R10))
   AB <- sweep(A, 1:3, B, "+")
   rm(A,B)
-  R1t <- -(1/TR) * log((1 - AB) / (1 - cos(theta) * AB))
+  TR <- 3.14/1000
+  R1t <- -(1/TR) * log((1 - AB) / (1 - cos(dtheta) * AB))
   rm(AB)
   conc <- sweep(R1t, 1:3, R1est$R10, "-") / r1
 

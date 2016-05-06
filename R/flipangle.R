@@ -400,6 +400,7 @@ setMethod("CA.fast", signature(dynamic="array"),
   theta <- dangle * pi/180
   cat("Switching to DCE TR...", fill=TRUE)
   TR <- 3.14/1000
+  cat("Using injection time of: ", injectionTime, "frames. ", fill=TRUE)
   S0 <- dynamic[,,,1:injectionTime]
   S0mean <- apply(S0, c(1, 2, 3), mean)
   

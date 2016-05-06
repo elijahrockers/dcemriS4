@@ -370,7 +370,7 @@ setMethod("CA.fast", signature(dynamic="array"),
                    control=minpack.lm::nls.lm.control(maxiter=200),
                    multicore=FALSE, verbose=FALSE)
 	    .dcemriWrapper("CA.fast", dynamic, dyn.mask, dangle, flip,
-                           fangles, TR, r1, control, multicore, verbose))
+                           fangles, TR, injectionTime, r1, control, multicore, verbose))
 
 #############################################################################
 ## CA.fast() = estimate contrast-agent concentration and other stuff

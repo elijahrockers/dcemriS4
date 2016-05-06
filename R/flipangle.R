@@ -398,12 +398,19 @@ setMethod("CA.fast", signature(dynamic="array"),
     cat("  Calculating concentration...", fill=TRUE)
   }
   theta <- dangle * pi/180
-  cat("Using TR of 3.14 ms to calculate R1t...", fill=TRUE)
+  cat("Switching to DCE TR...", fill=TRUE)
   TR <- 3.14/1000
   S0 <- dynamic[,,,1:10]
   S0mean <- apply(S0, c(1, 2, 3), mean)
+  
+  ## Calc new M0
+  cat("Calculating new M0...", fill=TRUE)
+  newM0 <- sweep(sweep(S0mean, 1:3, (1 - cos(theta) * exp(-TR * R1est$R10)), "*"),
+             1:3, (1 - cos(theta) * exp(-TR * R1est$R10)), "/")
+  
+  
   A <- sweep(sweep(dynamic, 1:3, S0mean, "-"),
-             1:3, R1est$M0, "/") / sin(theta)
+             1:3, newM0, "/") / sin(theta)
   B <- (1 - exp(-TR * R1est$R10)) / (1 - cos(theta) * exp(-TR * R1est$R10))
   AB <- sweep(A, 1:3, B, "+")
   rm(A,B)
@@ -411,7 +418,7 @@ setMethod("CA.fast", signature(dynamic="array"),
   rm(AB)
   conc <- sweep(R1t, 1:3, R1est$R10, "-") / r1
 
-  list(M0 = R1est$M0, R10 = R1est$R10, R1t = R1t, conc = conc)
+  list(M0 = R1est$M0, R10 = R1est$R10, R1t = R1t, conc = conc, newM0 = newM0)
 }
 
 #############################################################################

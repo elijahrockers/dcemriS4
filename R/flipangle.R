@@ -376,7 +376,7 @@ setMethod("CA.fast", signature(dynamic="array"),
 ## CA.fast() = estimate contrast-agent concentration and other stuff
 #############################################################################
 
-.CA.fast <- function(dynamic, dyn.mask, dangle, flip, fangles, TR,
+.CA.fast <- function(dynamic, dyn.mask, dangle, flip, fangles, TR, injectionTime=1,
                      r1=4, control=minpack.lm::nls.lm.control(maxiter=200),
                      multicore=FALSE, verbose=FALSE) {
 
@@ -400,7 +400,7 @@ setMethod("CA.fast", signature(dynamic="array"),
   theta <- dangle * pi/180
   cat("Switching to DCE TR...", fill=TRUE)
   TR <- 3.14/1000
-  S0 <- dynamic[,,,1:2]
+  S0 <- dynamic[,,,1:injectionTime]
   S0mean <- apply(S0, c(1, 2, 3), mean)
   
   ## Calc new M0

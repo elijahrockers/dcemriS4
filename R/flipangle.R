@@ -366,7 +366,7 @@ setGeneric("CA.fast", function(dynamic, ...) standardGeneric("CA.fast"))
 #' @rdname relaxation-methods
 #' @aliases CA.fast,array-method
 setMethod("CA.fast", signature(dynamic="array"),
-	  function(dynamic, dyn.mask, dangle, flip, fangles, TR, r1=4,
+	  function(dynamic, dyn.mask, dangle, flip, fangles, TR, injectionTime=1, r1=4,
                    control=minpack.lm::nls.lm.control(maxiter=200),
                    multicore=FALSE, verbose=FALSE)
 	    .dcemriWrapper("CA.fast", dynamic, dyn.mask, dangle, flip,

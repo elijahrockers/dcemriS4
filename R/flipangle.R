@@ -407,7 +407,7 @@ setMethod("CA.fast", signature(dynamic="array"),
   ## Calc new M0
   cat("Calculating new M0...", fill=TRUE)
   newM0 <- sweep(sweep(S0mean, 1:3, (1 - cos(theta) * exp(-TR * R1est$R10)), "*"),
-             1:3, (1 - cos(theta) * exp(-TR * R1est$R10)), "/")
+             1:3, sin(theta) * (1 - exp(-TR * R1est$R10)), "/")
   
   
   A <- sweep(sweep(dynamic, 1:3, S0mean, "-"),
